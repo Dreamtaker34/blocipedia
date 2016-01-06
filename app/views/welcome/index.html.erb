@@ -15,7 +15,13 @@
     </div>
     <div class="col-sm-5">
       <h3 class="text-center">Create private wikis!</h3>
-      <p><center>Coming soon!</center></p>
+      <% if current_user.present? && current_user.premium? %>
+        <p><center><%= link_to "Create New Wiki", new_wiki_path, class: 'btn btn-success' %></center></p>
+      <% elsif current_user.present? && current_user.standard? %>
+        <p><center><%= link_to "Upgrade plan for Private Wikis", new_charge_path, class: 'btn btn-primary' %></center></p>
+      <% else %>
+        <p><center><%= link_to "Sign up and upgrade!", new_user_registration_path, class: 'btn btn-primary' %></center></p>
+      <% end %>
     </div>
   </div>
 </div>

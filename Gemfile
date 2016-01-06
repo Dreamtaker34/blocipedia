@@ -49,3 +49,5 @@ end
 gem 'bootstrap-sass'
 gem 'devise'
 gem 'pundit'
+gem 'stripe'
+gem 'figaro', '1.0'
