@@ -1,5 +1,5 @@
 class WikisController < ApplicationController
-  before_action :authenticate_user!, except: [:index, :show]
+  # before_action :authenticate_user!, except: [:index, :show]
 
   def index
     @wikis = Wiki.all
@@ -30,6 +30,13 @@ class WikisController < ApplicationController
 
   def edit
     @wiki = Wiki.find(params[:id])
+
+    if policy(@wiki).edit?
+
+    else
+      flash[:notice] = "Not authorized to edit wiki."
+      redirect_to @wiki
+    end
   end
 
   def update
@@ -37,7 +44,7 @@ class WikisController < ApplicationController
     @wiki.title = params[:wiki][:title]
     @wiki.body = params[:wiki][:body]
     @wiki.private = params[:wiki][:private]
-
+    authorize @wiki
     if @wiki.save
       flash[:notice] = "Wiki was updated."
       redirect_to @wiki

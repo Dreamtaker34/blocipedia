@@ -6,6 +6,7 @@ class WikiPolicy < ApplicationPolicy
   end
 
   def update?
+    puts "hello there!"
     user.present?
   end
 end

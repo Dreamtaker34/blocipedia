@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
   def show
-    @user = current_user
+    @user = User.find(params[:id])
   end
 
   def downgrade
@@ -8,6 +8,6 @@ class UsersController < ApplicationController
     @user.standard!
 
     flash[:notice] = "Your account has been changed to the Free Plan."
-    redirect_to user_path
+    redirect_to user_path(current_user)
   end
 end

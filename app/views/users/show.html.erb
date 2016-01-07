@@ -1,9 +1,12 @@
-<h1><%= current_user.email %></h1>
+<h1><%= @user.email %></h1>
 <p>I am a <%= current_user.role %> plan user!</p>
 <br>
-<p>If you would like to downgrade your account to a Free user. Please click here.</p>
-<% if current_user.standard? %>
-  <%= link_to "Upgrade your plan", new_charge_path, class: 'btn btn-primary' %>
-<% else %>
-  <%= link_to "Change to Free Plan", current_user, method: :downgrade, class: 'btn btn-primary', data: {confirm: 'Are you sure you would like to change to the Free plan?'} %>
+<% if current_user == @user %>
+  <% if current_user.standard? %>
+    <p>Want to take part in private wikis?</p>
+    <%= link_to "Upgrade your plan", new_charge_path, class: 'btn btn-primary' %>
+  <% else %>
+    <p>Looking to downgrade your account to a Free user?</p>
+    <%= link_to "Change to Free Plan", downgrade_path, method: :get, class: 'btn btn-primary', data: {confirm: 'Are you sure you would like to change to the Free plan?'} %>
+  <% end %>
 <% end %>
