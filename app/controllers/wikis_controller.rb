@@ -2,23 +2,39 @@ class WikisController < ApplicationController
   # before_action :authenticate_user!, except: [:index, :show]
 
   def index
-    @wikis = Wiki.all
+    @wikis = policy_scope(Wiki)
   end
 
   def show
     @wiki = Wiki.find(params[:id])
+
+    if @wiki.private?
+      if current_user.present? && (current_user.admin? || current_user.premium?)
+      else
+        flash[:alert] = "You must be a premium member to view this."
+        redirect_to root_path
+      end
+    end
+
   end
 
   def new
     @wiki = Wiki.new
+    if policy(@wiki).new?
+
+    else
+      flash[:notice] = "You need at least a free account to create a Wiki. Sign up or Log in!"
+      redirect_to root_path
+    end
   end
 
   def create
     @wiki = Wiki.new
+    @wiki.user = current_user
     @wiki.title = params[:wiki][:title]
     @wiki.body = params[:wiki][:body]
     @wiki.private = params[:wiki][:private]
-
+    authorize @wiki
     if @wiki.save
       flash[:notice] = "Wiki was saved."
       redirect_to @wiki
@@ -34,7 +50,7 @@ class WikisController < ApplicationController
     if policy(@wiki).edit?
 
     else
-      flash[:notice] = "Not authorized to edit wiki."
+      flash[:notice] = "You must be logged in to edit a Wiki."
       redirect_to @wiki
     end
   end

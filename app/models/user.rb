@@ -1,4 +1,5 @@
 class User < ActiveRecord::Base
+  has_many :wikis
   after_initialize :init
 
   # Include default devise modules. Others available are:
@@ -9,6 +10,6 @@ class User < ActiveRecord::Base
   enum role: [:standard, :premium, :admin]
 
   def init
-    self.role   ||= :standard    
+    self.role   ||= :standard
   end
 end
