@@ -14,6 +14,11 @@ class WikiPolicy < ApplicationPolicy
   end
 
   def show?
+    if record.private
+      user.present? && (user.admin? || user.premium?)
+    else
+      true
+    end
   end
 
   def create?

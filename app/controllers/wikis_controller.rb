@@ -8,21 +8,16 @@ class WikisController < ApplicationController
   def show
     @wiki = Wiki.find(params[:id])
 
-    if @wiki.private?
-      if current_user.present? && (current_user.admin? || current_user.premium?)
-      else
-        flash[:alert] = "You must be a premium member to view this."
-        redirect_to root_path
-      end
+    if !policy(@wiki).show?
+      flash[:alert] = "You must be a premium member to view this."
+      redirect_to root_path
     end
 
   end
 
   def new
     @wiki = Wiki.new
-    if policy(@wiki).new?
-
-    else
+    if !policy(@wiki).new?
       flash[:notice] = "You need at least a free account to create a Wiki. Sign up or Log in!"
       redirect_to root_path
     end
