@@ -1,3 +1,25 @@
 <h2>Edit the Wiki.</h2>
 
-<%= render partial: 'form', locals: { wiki: @wiki } %>
+<%= render partial: 'wikis/form', locals: { wiki: @wiki } %>
+
+<% if !@collaborators.blank? %>
+  <h4>Collaborators</h4>
+
+  <% @collaborators.each do |c| %>
+    <p>
+      <%= link_to wiki_collaborator_path(@wiki, c), method: :delete do %>
+        <span class="glyphicon glyphicon-remove-circle"></span>
+      <%end%>
+      <%= c.user.email %>
+    </p>
+  <%end%>
+<% end %>
+
+<%= form_for [@wiki, @collaborator] do |f| %>
+ <h4><%= f.label :user_id, 'Add New Collaborators' %></h4>
+
+ <%= fields_for :user, @collaborator.user do |ff| %>
+  <%= ff.email_field(:email) %><br/><br/>
+ <% end %>
+ <%= f.submit class: 'btn btn-success' %>
+<%end%>

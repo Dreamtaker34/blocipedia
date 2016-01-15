@@ -42,9 +42,12 @@ class WikisController < ApplicationController
   def edit
     @wiki = Wiki.find(params[:id])
 
-    if policy(@wiki).edit?
+    @collaborators = @wiki.collaborators
+    @collaborator = Collaborator.new
+    # raise
+    @users = User.all
 
-    else
+    if !policy(@wiki).edit?
       flash[:notice] = "You must be logged in to edit a Wiki."
       redirect_to @wiki
     end
