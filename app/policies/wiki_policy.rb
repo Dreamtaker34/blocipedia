@@ -1,10 +1,12 @@
 class WikiPolicy < ApplicationPolicy
   class Scope < Scope
     def resolve
-      if user.present? && (user.admin? || user.premium?)
+      if user.present? && user.admin?
         scope.all
       else
-        scope.where(:private => false)
+        scope.find_by_private_and_user_id(false, user.id)
+        # scope.where(:private => false)
+
       end
     end
   end
@@ -15,7 +17,7 @@ class WikiPolicy < ApplicationPolicy
 
   def show?
     if record.private
-      user.present? && (user.admin? || user.premium?)
+      user.present? && (user.admin? || user.id == @record.user_id || user.id == @record.collaborators.user_id)
     else
       true
     end
