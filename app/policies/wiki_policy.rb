@@ -37,7 +37,7 @@ class WikiPolicy < ApplicationPolicy
 
   def show?
     if record.private
-      user.present? && (user.admin? || user.id == @record.user_id || user.id == @record.users(user))
+      user.present? && (user.admin? || user.id == @record.user_id ||  @record.users.include?(user))
     else
       true
     end
